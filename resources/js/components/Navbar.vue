@@ -6,9 +6,9 @@
        <img :src="'/images/logo.svg'" alt="logo" class="h-[80px]">
       </div>
 
-      <nav class="hidden md:flex space-x-10 font-semibold text-black">
+      <nav class="hidden md:flex space-x-10 font-semibold">
         <router-link to="/" class="hover:text-dark">HOME</router-link>
-        <router-link to="/#services" class="hover:text-dark">OUR SERVICES</router-link>
+        <router-link to="/servicesPage" class="hover:text-dark">OUR SERVICES</router-link>
         <router-link to="/#faqs" class="hover:text-dark">FAQs</router-link>
         <router-link to="/#testimonials" class="hover:text-dark">TESTIMONIALS</router-link>
         <router-link to="/#contact" class="hover:text-dark">CONTACT US</router-link>

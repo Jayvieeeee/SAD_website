@@ -12,22 +12,28 @@ class AppointmentConfirmationMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $patient;
-    public $appointments;
+    public Patient $patient;
+    public Appointment $appointment;
 
-    public function __construct($patient, $appointments)
+    /**
+     * Create a new message instance.
+     */
+    public function __construct(Patient $patient, Appointment $appointment)
     {
         $this->patient = $patient;
-        $this->appointments = $appointments;
+        $this->appointment = $appointment;
     }
 
+    /**
+     * Build the message.  
+     */
     public function build()
     {
         return $this->subject('Your Appointment Confirmation')
             ->view('emails.appointment_confirmation')
             ->with([
                 'patient' => $this->patient,
-                'appointments' => $this->appointments
+                'appointments' => collect([$this->appointment]) // wrap in collection
             ]);
     }
 }

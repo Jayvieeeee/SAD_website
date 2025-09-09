@@ -2,11 +2,13 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LandingPage from '../components/LandingPage.vue'
 import Appointment from '../components/Appointment.vue'
 import ViewAppointment from '../components/viewAppointment.vue'
+import ServicesPage from '../components/servicesPage.vue'
 
 const routes = [
   { path: '/', name: 'Home', component: LandingPage },
   { path: '/appointment', name: 'Appointment', component: Appointment },
-  { path: '/viewAppointment', name: 'ViewAppointment', component: ViewAppointment}
+  { path: '/viewAppointment', name: 'ViewAppointment', component: ViewAppointment },
+  { path: '/servicesPage', name: 'ServicesPage', component: ServicesPage }
 ]
 
 const router = createRouter({

@@ -10,15 +10,14 @@ return new class extends Migration {
         Schema::create('appointments', function (Blueprint $table) {
             $table->id('appointment_id');
 
-            // Explicit FK definitions
-            $table->unsignedBigInteger('patient_id');
-            $table->unsignedBigInteger('service_id');
-
-            $table->foreign('patient_id')->references('patient_id')->on('patients')->onDelete('cascade');
-            $table->foreign('service_id')->references('service_id')->on('services')->onDelete('cascade');
+            // Appointment belongs to a patient
+            $table->foreignId('patient_id')
+                  ->constrained('patients', 'patient_id')
+                  ->cascadeOnDelete();
 
             $table->dateTime('schedule_datetime');
-            $table->enum('status', ['pending', 'confirmed', 'completed', 'cancelled'])->default('pending');
+            $table->enum('status', ['pending', 'confirmed', 'completed', 'cancelled'])
+                  ->default('pending');
             $table->timestamps();
         });
     }

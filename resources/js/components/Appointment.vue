@@ -4,11 +4,14 @@ import api from '../axios.js'
 import AppointmentSidebar from './appointmentSidebar.vue'
 import DateTimeModal from './DateTimeModal.vue'
 import { useValidation } from '../composables/useValidation.js'
+import SuccessModal from './showSuccessModal.vue'
+import dayjs from "dayjs";
 
 const activeBtn = ref("schedule")
 const setActive = (btn) => { activeBtn.value = btn }
 
 const showDateTimeModal = ref(false)
+const showSuccessModal = ref(false)
 // date & time selection
 const selectedDate = ref('')
 const selectedTime = ref('')
@@ -31,6 +34,7 @@ const { errors, validate } = useValidation({
     (v) => /\S+@\S+\.\S+/.test(v) || "Invalid email",
   ],
   contactNo: [(v) => !!v || "Contact number is required"],
+  schedule: [(v) => !!v || "Please select a date and time"],
   selectedServices: [
     (v) => (Array.isArray(v) && v.length > 0) || "Please select at least one service",
   ],
@@ -38,31 +42,33 @@ const { errors, validate } = useValidation({
 
 
 const submit = async () => {
-  const form = {
+  const isValid = validate({
     firstName: firstName.value,
     lastName: lastName.value,
     email: email.value,
     contactNo: contactNo.value,
-    services: selectedServices.value,
-    schedule: selectedDate.value && selectedTime.value
-  }
+    schedule: selectedDate.value && selectedTime.value,
+    selectedServices: selectedServices.value,
+  });
 
-  if (!validate(form)) return
+  if (!isValid) return;
 
   try {
     await api.post('/appointments', {
-      first_name: form.firstName,
-      last_name: form.lastName,
-      email: form.email,
-      contact_no: form.contactNo,
-      services: Array.from(form.services).map(id => Number(id)),
-      schedule_datetime: `${selectedDate.value} ${selectedTime.value}`
-    })
-    console.log("Booking success")
+      first_name: firstName.value,
+      last_name: lastName.value,
+      email: email.value,
+      contact_no: contactNo.value,
+      schedule_datetime: dayjs(`${selectedDate.value} ${selectedTime.value}`).format("YYYY-MM-DD HH:mm:ss"),
+      services: selectedServices.value,
+    });
+
+    console.log("Booking success");
+    showSuccessModal.value = true;
   } catch (err) {
-    console.error("Error:", err.response?.data || err)
+    console.error("Error:", err.response?.data || err);
   }
-}
+};
 </script>
 
 
@@ -104,7 +110,7 @@ const submit = async () => {
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Middle Name</label>
-                    <input v-model="middleName" type="text" placeholder="Enter middle name" name="middleName"
+                    <input type="text" placeholder="Enter middle name" name="middleName"
                         class="w-3/4 px-4 py-2 border border-gray-300 rounded-lg focus:ring-neutral focus:border-neutral" />
                         <p v-if="errors.middleName" class="text-red-500 text-sm">{{ errors.middleName }}</p>
                     </div>
@@ -279,7 +285,11 @@ const submit = async () => {
       </div>
     </div>
 
-
+    <!--success modal-->
+    <SuccessModal
+      v-model="showSuccessModal"
+      message="Appointment booked successfully!"
+    />
 
 <!-- Modal -->
      <DateTimeModal

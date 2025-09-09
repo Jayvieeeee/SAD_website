@@ -10,20 +10,13 @@
     <p>Thank you for booking your appointment at <strong>District Smile Dental Clinic</strong>.</p>
 
     <p><strong>Appointment Details:</strong></p>
-    @if(count($appointments) > 0)
-        @php
-            $first = $appointments[0]; 
-            $serviceNames = $appointments->map(fn($a) => $a->service->name ?? 'Dental Service')->implode(', ');
-        @endphp
+    <ul>
+        <li><strong>Service:</strong> {{ $appointment->service->service_name ?? 'Dental Service' }}</li>
+        <li><strong>Date:</strong> {{ \Carbon\Carbon::parse($appointment->schedule_datetime)->format('F j, Y') }}</li>
+        <li><strong>Time:</strong> {{ \Carbon\Carbon::parse($appointment->schedule_datetime)->format('h:i A') }}</li>
+    </ul>
 
-        <ul>
-            <li><strong>Services:</strong> {{ $serviceNames }}</li>
-            <li><strong>Date:</strong> {{ \Carbon\Carbon::parse($first->schedule_datetime)->format('F j, Y') }}</li>
-            <li><strong>Time:</strong> {{ \Carbon\Carbon::parse($first->schedule_datetime)->format('h:i A') }}</li>
-        </ul>
-    @endif
-
-    <p>Your Confirmation code is: <strong>{{ $patient-> confirmation_code }}</strong></p>
+    <p>Your Confirmation code is: <strong>{{ $patient->confirmation_code }}</strong></p>
     <p>Please keep this code safe to view your appointment.</p>
     <br>
 

@@ -10,6 +10,8 @@ class Service extends Model
     use HasFactory;
 
     protected $primaryKey = 'service_id';
+    public $incrementing = true; 
+    protected $keyType = 'int';  
 
     protected $fillable = [
         'service_name',
@@ -18,7 +20,7 @@ class Service extends Model
 
     public function appointments()
     {
-        return $this->hasMany(Appointment::class, 'service_id', 'service_id');
+        return $this->belongsToMany(Appointment::class, 'appointment_service', 'service_id', 'appointment_id');
     }
 
     public function tools()
@@ -26,3 +28,5 @@ class Service extends Model
         return $this->belongsToMany(Tool::class, 'service_tools', 'service_id', 'tool_id');
     }
 }
+
+
